@@ -13,7 +13,7 @@ Every cluster will consist of one or more containers:
  * (optionally) 1 loadbalancer container as the entrypoint to the cluster (nginx)
  * (optionally) 1 (or more) agent node containers (k3s)
 
-Typically the configuration for the cluster is stored in a [YAML file](k3d/demo_config.yaml). The options can be reviewed [Using Config Files](https://k3d.io/v5.6.0/usage/configfile/)
+Typically the configuration for the cluster is stored in a [YAML file](k3d/demo_config.yaml). The options can be reviewed in the k3d documentation: [Using Config Files](https://k3d.io/v5.6.0/usage/configfile/)
 
 ```bash
 # create a cluster with 1 server, 2 agents and define the listening ports of your Traefik instance
