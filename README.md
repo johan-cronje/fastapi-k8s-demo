@@ -50,5 +50,6 @@ echo ${token}
 
 # You can access your Dashboard using the kubectl command-line tool by running the following command
 kubectl proxy --address='0.0.0.0' --accept-hosts='^*$'
-
+# OR
+kubectl --address='0.0.0.0' -n kubernetes-dashboard port-forward svc/kubernetes-dashboard 9090:80
 ```
