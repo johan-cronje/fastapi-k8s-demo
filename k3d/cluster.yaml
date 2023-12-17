@@ -9,6 +9,9 @@ ports:
   - port: 9080:80
     nodeFilters:
       - loadbalancer
+  - port: 9090:9090
+    nodeFilters:
+      - loadbalancer
 options:
   k3d:
     wait: true
