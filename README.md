@@ -4,20 +4,23 @@ This repo demonstrates how to deploy a Python FastAPI application to a Kubernete
 ## Prerequisites
 
 ### Kubernetes
-I use [k3d](https://k3d.io/) which is a Docker wrapper around [K3S](https://k3s.io/) which is a Lightweight Kubernetes distribution built for IoT & Edge computing.
+I use [k3d](https://k3d.io/) which is a Docker wrapper around [K3S](https://k3s.io/), a Lightweight Kubernetes distribution built for IoT & Edge computing.
 
-Use the command `k3d create cluster` to create a new k3s cluster with containerized nodes (k3s in docker)
-
-Every cluster will consist of one or more containers:
+Every k3d cluster will consist of one or more containers:
  * 1 (or more) server node container (k3s)
  * (optionally) 1 loadbalancer container as the entrypoint to the cluster (nginx)
  * (optionally) 1 (or more) agent node containers (k3s)
 
-Typically the configuration for the cluster is stored in a [YAML file](k3d/demo_config.yaml). The options can be reviewed in the k3d documentation: [Using Config Files](https://k3d.io/v5.6.0/usage/configfile/)
+By default, k3d will update your default kubeconfig with your new cluster’s details and set the current-context to it.
+
+Typically the configuration for the cluster is stored in a k3d SimpleConfig file [YAML file](k3d/demo_config.yaml). The options can be reviewed in the k3d documentation: [Using Config Files](https://k3d.io/v5.6.0/usage/configfile/)
 
 ```bash
+# first create the image registry
+k3d registry create demo-registry.localhost --port 12345
+
 # create a cluster with 1 server, 2 agents and define the listening ports of your Traefik instance
-k3d cluster create --config k3d/demo_config.yaml
+k3d cluster create --config k3d/demo_config.yaml --registry-use k3d-demo-registry.localhost:12345
 
 # display the ip addresses of the Docker containers that make up the K3d cluster
 docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q) | grep 'k3d-demo'
@@ -34,6 +37,9 @@ kubectl cluster-info
 
 # delete all clusters when done
 k3d cluster delete demo
+
+# delete registry
+k3d registry delete k3d-demo-registry.localhost
 ```
 
 Install Dashboard:
