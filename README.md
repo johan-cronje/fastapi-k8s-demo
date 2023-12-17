@@ -49,6 +49,6 @@ token=$(kubectl -n kubernetes-dashboard create token admin-user)
 echo ${token}
 
 # You can access your Dashboard using the kubectl command-line tool by running the following command
-kubectl proxy --address=0.0.0.0
+kubectl proxy --address='0.0.0.0' --accept-hosts='^*$'
 
 ```
