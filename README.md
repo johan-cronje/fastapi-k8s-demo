@@ -19,14 +19,17 @@ Typically the configuration for the cluster is stored in a [YAML file](k3d/demo_
 # create a cluster with 1 server, 2 agents and define the listening ports of your Traefik instance
 k3d cluster create --config k3d/demo_config.yaml
 
+# see cluster info
+kubectl cluster-info
+
 # see the list of k3d clusters
 k3d cluster list
 
 # list the local Kubernetes contexts
 kubectl config get-contexts
 # switch cluster context (i.e. which kubectl talks to)
-kubectl config use-context k3d-k3s-default
+kubectl config use-context k3d-demo
 
 # delete all clusters when done
-k3d cluster delete --all
+k3d cluster delete demo
 ```
