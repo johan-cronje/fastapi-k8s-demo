@@ -5,12 +5,8 @@ metadata:
   name: demo
 servers: 1
 agents: 2
-image: rancher/k3s:v1.25.16-k3s4
 ports:
   - port: 9080:80
-    nodeFilters:
-      - loadbalancer
-  - port: 9443:443
     nodeFilters:
       - loadbalancer
 options:
