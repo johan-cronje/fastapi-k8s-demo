@@ -52,12 +52,6 @@ docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}
 # create the FastAPI app deployment
 kubectl apply -f k3d/deployment.yaml
 
-# create a ClusterIP service for deployment
-kubectl apply -f k3d/service.yaml
-
-# apply Traefik ingress controller to route the traffic from the incoming request to the fastapi-app service
-kubectl apply -f k3d/ingress.yaml
-
 # OPTIONAL: view service
 kubectl describe service fastapi-app
 ```
