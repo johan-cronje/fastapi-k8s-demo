@@ -59,7 +59,7 @@ kubectl describe service fastapi-service
 
 ### Test
 
-Access the FastAPI application in your browser at [http://localhost:9080/] to see a welcome message or [http://localhost:9080/docs] for the OpenAPI Swagger style documentation
+Access the FastAPI application in your browser at (http://localhost:9080/) to see a welcome message or (http://localhost:9080/docs) for the OpenAPI Swagger style documentation
 
 ### Cleanup
 
@@ -74,3 +74,7 @@ k3d cluster delete demo
 # delete registry
 k3d registry delete k3d-demo-registry.localhost
 ```
+
+### ToDo
+1. Add nginx Ingress Controller so multiple services can be exposed
+2. Add Kubernetes Dashboard
