@@ -1,0 +1,32 @@
+# k3d cluster configuration file
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: demo
+servers: 1
+agents: 2
+ports:
+  - port: 9080:80   # same as '--port 80:80@loadbalancer'
+    nodeFilters:
+      - loadbalancer
+registries:
+  use:
+    - k3d-registry.localhost:12345
+  config: |
+    mirrors:
+      "localhost:12345":
+        endpoint:
+          - http://k3d-registry.localhost:12345
+options:
+  k3d:
+    wait: true
+    timeout: "60s"
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
+  # to disable Traefik ingress
+  # k3s:
+  #   extraArgs:
+  #     - arg: "--disable=traefik"
+  #       nodeFilters:
+  #         - server:*

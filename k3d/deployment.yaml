@@ -5,12 +5,10 @@ metadata:
   labels:
     app: fastapi-app
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: fastapi-app
-  replicas: 3
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -21,3 +19,45 @@ spec:
         image: k3d-registry.localhost:12345/fastapi-app:latest
         ports:
         - containerPort: 8000
+          name: fastapi-port
+  strategy:
+    type: RollingUpdate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  selector:
+    app: fastapi-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: fastapi-port
+#   - name: http
+#     port: 80
+#     protocol: TCP
+#     targetPort: 9080
+# type: LoadBalancer
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi-service
+            port:
+              number: 80

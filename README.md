@@ -27,9 +27,10 @@ k3d registry create registry.localhost --port 12345
 # build docker image, tag & push to local k3d registry
 docker build --tag fastapi-app:latest .
 
-# OPTIONAL: test container
+# OPTIONAL: run & test the container
 docker run --rm -it -p 9080:8000 fastapi-app:latest
-# should be acessible at http://localhost:9080
+curl localhost:9080
+# {"message":"Hello from FastAPI"}
 
 # tag and push image
 docker tag fastapi-app:latest k3d-registry.localhost:12345/fastapi-app:latest
@@ -43,8 +44,8 @@ Create the cluster and deploy the API
 > If the registry already exists and the image has been pushed, start here
 
 ```bash
-# create a cluster with 1 server, 2 agents and define the listening ports of your Traefik instance
-k3d cluster create --config k3d/cluster.yaml --registry-use k3d-registry.localhost:12345 --registry-config k3d/registry.yaml
+# create a cluster with 1 server, 2 agents
+k3d cluster create --config k3d/k3d-config.yaml
 
 # OPTIONAL: display the ip addresses of the Docker containers that make up the K3d cluster
 docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q) | grep 'k3d-'
@@ -53,31 +54,20 @@ docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}
 kubectl apply -f k3d/deployment.yaml
 
 # OPTIONAL: view service
-kubectl describe service fastapi-app
+kubectl describe service fastapi-service
 ```
 
-### Kubernetes Dashboard
+### Test
 
-```bash
-# install Kubernetes Dashboard
-kubectl apply -f dashboard/k8s_dashboard.yaml
-
-# verify that Dashboard is deployed and running
-kubectl get pod -n kubernetes-dashboard
-
-# create a ServiceAccount and ClusterRoleBinding to provide admin access to the newly created cluster
-kubectl apply -f dashboard/dashboard-admin-user.yaml -f dashboard/dashboard-admin-user-role.yml
-
-# create the token to log in to the Dashboard
-token=$(kubectl -n kubernetes-dashboard create token admin-user) && echo ${token}
-
-# apply Traefik ingress controller to route the traffic from the incoming request to the kubernetes-dashboard service
-kubectl apply -f dashboard/ingress.yaml
-```
+Access the FastAPI application in your browser at [http://localhost:9080/] to see a welcome message or [http://localhost:9080/docs] for the OpenAPI Swagger style documentation
 
 ### Cleanup
 
 ```bash
+# stop/start cluster
+k3d cluster stop demo
+k3d cluster start demo
+
 # delete cluster
 k3d cluster delete demo
 
